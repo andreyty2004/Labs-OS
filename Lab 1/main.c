@@ -93,12 +93,14 @@ void print_file_info(char *path, file_info *file, int long_format)
     char time_str[14];
     strftime(time_str, sizeof(time_str), "%b %d %H:%M", localtime(&file->sb.st_mtime));
 
-    // Вывод с цветами
-    printf("%-10s %-5lu %-8s %-8s %-8ld %-12s %s%-s%s",
+    if(pw && gr)
+    {
+
+    	printf("%-10s %-5lu %-8s %-8s %-8ld %-12s %s%-s%s",
            permissions, 
            file -> sb.st_nlink, 
-           pw ? pw -> pw_name : "?", 
-           gr ? gr -> gr_name : "?",
+           pw -> pw_name, 
+           gr -> gr_name,
            file -> sb.st_size, //!
            time_str,
            S_ISDIR(file->sb.st_mode) ? ANSI_COLOR_BLUE :
@@ -107,6 +109,24 @@ void print_file_info(char *path, file_info *file, int long_format)
            file -> name,
            ANSI_COLOR_RESET);
 
+    }
+    else
+    {
+   	 printf("%-10s %-5lu %-8li %-8li %-8ld %-12s %s%-s%s",
+           permissions, 
+           file -> sb.st_nlink, 
+           (long)(file -> sb.st_uid), 
+           (long)(file -> sb.st_gid),
+           file -> sb.st_size, //!
+           time_str,
+           S_ISDIR(file->sb.st_mode) ? ANSI_COLOR_BLUE :
+           S_ISLNK(file->sb.st_mode)  ? ANSI_COLOR_CYAN :
+           file -> sb.st_mode & (S_IXUSR || S_IXGRP || S_IROTH) ? ANSI_COLOR_GREEN : "",
+           file -> name,
+           ANSI_COLOR_RESET);
+
+    }
+    // Вывод с цветами
     // Куда указывает ссылка
     if(S_ISLNK(file->sb.st_mode))
     {
