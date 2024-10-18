@@ -48,12 +48,15 @@ int main()
                 printf("[CHILD] I'm child of %d, my pid is %d\n", getppid(), getpid());
                 break;
         default:
-                pid_t _res;
-                wait(&_res);
-                while(1){};
-                printf("[PARENT] I'm parent of %d, my pid is %d, my parent pid is %d\n", res, getpid(), getppid());
-                printf("[PARENT] Child exit code %d\n", res);
-                break;
+		{
+			pid_t _res;
+                	wait(&_res);
+                	// while{1}();
+			sleep(10);
+                	printf("[PARENT] I'm parent of %d, my pid is %d, my parent pid is %d\n", res, getpid(), getppid());
+                	printf("[PARENT] Child exit code %d\n", res);
+                	break;
+		}
     }
     return 0;
 }
